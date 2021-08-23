@@ -86,7 +86,7 @@ class CookieHandler extends CDP {
     };
     // Get browser cookies of current page/url
     async getCookies() {
-        const browserCookies = await this.Network.getCookies({urls: [this.url]});
+        const browserCookies = await this.Network.getCookies({urls: [this.url, (new URL(this.url)).hostname]});
         const toughCookies = this.formatCookies(browserCookies);
         console.log('toughCookies', toughCookies);
         // Add cookies to cookieJar
@@ -102,16 +102,16 @@ class CookieHandler extends CDP {
     async setCookies(rawCookies) {
         const browserCookies = this.parseCookies(rawCookies);
         // Delete old cookies before setting new ones
-        for (let i = 0; i < browserCookies.length; i++) {
-            const cookie = browserCookies[i];
-            const badCookie = {
-                name: cookie.name,
-                url: this.url,
-                domain: cookie.domain,
-                path: cookie.path
-            };
-            await this.Network.deleteCookies(badCookie);
-        }
+        // for (let i = 0; i < browserCookies.length; i++) {
+        //     const cookie = browserCookies[i];
+        //     const badCookie = {
+        //         name: cookie.name,
+        //         url: this.url,
+        //         domain: cookie.domain,
+        //         path: cookie.path
+        //     };
+        //     await this.Network.deleteCookies(badCookie);
+        // }
         // Store cookies in the browser
         await this.Network.setCookies({cookies: browserCookies});
     }
