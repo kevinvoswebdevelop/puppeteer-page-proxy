@@ -69,6 +69,7 @@ class CookieHandler extends CDP {
     constructor(request) {
         super(request._client);
         this.url = request.url();
+        console.log("URLLLLLLLLLLLLLLLLLL", this.url);
         this.domain = new URL(this.url).hostname;
     }
     // Parse an array of raw cookies to an array of cookie objects
@@ -87,6 +88,7 @@ class CookieHandler extends CDP {
     async getCookies() {
         const browserCookies = await this.Network.getCookies({urls: [this.url]});
         const toughCookies = this.formatCookies(browserCookies);
+        console.log('toughCookies', toughCookies);
         // Add cookies to cookieJar
         const cookieJar = CookieJar.deserializeSync({
                 version: 'tough-cookie@4.0.0',
