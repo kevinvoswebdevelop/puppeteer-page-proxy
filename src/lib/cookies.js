@@ -1,5 +1,6 @@
 const {CookieJar} = require("tough-cookie");
 const CDP = require("./cdp");
+const {HTTPRequest} = require('puppeteer');
 
 // Parse single raw cookie string to a cookie object for the browser
 const parseCookie = (rawCookie, domain) => {
@@ -62,9 +63,12 @@ const formatCookie = (cookie) => {
 
 // Responsible for getting and setting browser cookies
 class CookieHandler extends CDP {
+    /**
+     * @param {HTTPRequest} request
+     */
     constructor(request) {
         super(request._client);
-        this.url = (request.isNavigationRequest() || request.frame() == null) ? request.url() : request.frame().url();
+        this.url = (request.isNavigationRequest() || !request.frame()) ? request.url() : request.frame().url();
         this.domain = new URL(this.url).hostname;
     }
     // Parse an array of raw cookies to an array of cookie objects
